@@ -55,6 +55,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                         *image_index.borrow_mut() -= 1;
                     }
                 },
+                // Quit with escape
+                Key::Escape => {
+                    window.hide();
+                    app.quit();
+                },
                 _ => {}
             }
             let mut image = fltk::image::SharedImage::load(&std::path::Path::new(&images[*image_index.borrow()])).unwrap();
@@ -89,8 +94,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
 fn setup_window(image_w: i32, image_h: i32) -> (Window, Frame) {
     let mut window = Window::new(100, 100, 1440, 1080 - 15, "vwr"); // -15 to avoid empty space at the bottom TODO: fix this better
-    let frame = Frame::new(0, 0, 1440, 1080, ""); 
+    let frame = Frame::new(0, 0, 1440, 1080, "");
     window.end();
     window.show();
+    
     return (window, frame)
 }

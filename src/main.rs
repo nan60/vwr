@@ -32,7 +32,15 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         image.scale(width, height, true, false);
     }
     frame.set_image(Some(image));
-    let image_index = RefCell::new(0);
+    let mut init_index = 0;
+    for image in &images { // Iterate over the images to find the index of the initial image
+        if image == &args[1] {
+            // Copy position in vector to init_index
+            init_index = images.iter().position(|r| r == image).unwrap();
+            break;
+        }
+    }
+    let image_index = RefCell::new(init_index);
     window.clone().handle(move |_, ev| match ev {
         Event::KeyDown => {
             let key = app::event_key();

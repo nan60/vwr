@@ -1,3 +1,4 @@
+#![windows_subsystem = "windows"] // Hide console window on Windows
 use std::{env, fs, path::Path, cell::RefCell};
 use fltk::{app::{self, MouseWheel}, enums::{Event, Key}, frame::Frame, prelude::*, window::Window};
 

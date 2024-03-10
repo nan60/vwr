@@ -11,7 +11,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
     let app = app::App::default();
     app::background(0, 0, 0);
-    let image = fltk::image::SharedImage::load(&std::path::Path::new(&args[1])).unwrap();
+    let mut image = fltk::image::SharedImage::load(&std::path::Path::new(&args[1])).unwrap();
     let path = Path::new(&args[1]).parent().unwrap().to_str().unwrap();
     
     // Iterate over the files to add them to our vector
@@ -27,6 +27,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     let (mut window, mut frame) = setup_window(image.w(), image.h());
+    if image.w() > window.w() || image.h() > window.h() { // Always check if the first image is bigger than the window and scale it if it is
+        let (width, height) = (window.w(), window.h()); 
+        image.scale(width, height, true, false);
+    }
     frame.set_image(Some(image));
     let image_index = RefCell::new(0);
     window.clone().handle(move |_, ev| match ev {
@@ -76,8 +80,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 }
 
 fn setup_window(image_w: i32, image_h: i32) -> (Window, Frame) {
-    let mut window = Window::new(100, 100, image_w, image_h - 15, "vwr"); // -15 to avoid empty space at the bottom TODO: fix this better
-    let frame = Frame::new(0, 0, image_w, image_h, ""); 
+    let mut window = Window::new(100, 100, 1440, 1080 - 15, "vwr"); // -15 to avoid empty space at the bottom TODO: fix this better
+    let frame = Frame::new(0, 0, 1440, 1080, ""); 
     window.end();
     window.show();
     return (window, frame)

@@ -1,5 +1,7 @@
 use std::{env, fs, path::Path, cell::RefCell};
-use fltk::{app, frame::Frame, prelude::*, window::Window, enums::{Event, Key}};
+use fltk::{app::{self, MouseWheel}, enums::{Event, Key}, frame::Frame, prelude::*, window::Window};
+
+const ZOOM_FACTOR: i32 = 50;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args: Vec<String> = env::args().collect();
@@ -34,29 +36,37 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 Key::Right => {
                     if *image_index.borrow() < images.len() - 1{ 
                         *image_index.borrow_mut() += 1;
-                        let mut image = fltk::image::SharedImage::load(&std::path::Path::new(&images[*image_index.borrow()])).unwrap();
-                        if image.w() > window.w() || image.h() > window.h() {
-                            let (width, height) = (window.w(), window.h());
-                            image.scale(width, height, true, false);
-                        }
-                        frame.set_image(Some(image));
-                        window.redraw();
                     }
                 },
                 Key::Left => {
                     if *image_index.borrow() > 0 {
                         *image_index.borrow_mut() -= 1;
-                        let mut image = fltk::image::SharedImage::load(&std::path::Path::new(&images[*image_index.borrow()])).unwrap();
-                        if image.w() > window.w() || image.h() > window.h() {
-                            let (width, height) = (window.w(), window.h());
-                            image.scale(width, height, true, false);
-                        }
-                        frame.set_image(Some(image));
-                        window.redraw();
                     }
                 },
                 _ => {}
             }
+            let mut image = fltk::image::SharedImage::load(&std::path::Path::new(&images[*image_index.borrow()])).unwrap();
+            if image.w() > window.w() || image.h() > window.h() {
+                let (width, height) = (window.w(), window.h());
+                image.scale(width, height, true, false);
+            }
+            frame.set_image(Some(image));
+            window.redraw();
+            true
+        },
+        Event::MouseWheel => {
+            let mut image = fltk::image::SharedImage::load(&std::path::Path::new(&images[*image_index.borrow()])).unwrap();
+            match app::event_dy() {
+                MouseWheel::Up => {
+                    image.scale(image.w() - ZOOM_FACTOR, image.h() - ZOOM_FACTOR, true, true);
+                },
+                MouseWheel::Down => {
+                    image.scale(image.w() + ZOOM_FACTOR, image.h() + ZOOM_FACTOR, true, true)
+                },
+                _ => {}
+            }
+            frame.set_image(Some(image));
+            window.redraw();
             true
         },
         _ => false,

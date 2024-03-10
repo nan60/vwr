@@ -92,7 +92,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
-fn setup_window(image_w: i32, image_h: i32) -> (Window, Frame) {
+fn setup_window(_image_w: i32, _image_h: i32) -> (Window, Frame) {
     let mut window = Window::new(100, 100, 1440, 1080 - 15, "vwr"); // -15 to avoid empty space at the bottom TODO: fix this better
     let frame = Frame::new(0, 0, 1440, 1080, "");
     window.end();

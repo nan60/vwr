@@ -8,6 +8,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         std::process::exit(1);
     }
     let app = app::App::default();
+    app::background(0, 0, 0);
     let image = fltk::image::SharedImage::load(&std::path::Path::new(&args[1])).unwrap();
     let path = Path::new(&args[1]).parent().unwrap().to_str().unwrap();
     
@@ -33,7 +34,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 Key::Right => {
                     if *image_index.borrow() < images.len() - 1{ 
                         *image_index.borrow_mut() += 1;
-                        let image = fltk::image::SharedImage::load(&std::path::Path::new(&images[*image_index.borrow()])).unwrap();
+                        let mut image = fltk::image::SharedImage::load(&std::path::Path::new(&images[*image_index.borrow()])).unwrap();
+                        if image.w() > window.w() || image.h() > window.h() {
+                            let (width, height) = (window.w(), window.h());
+                            image.scale(width, height, true, false);
+                        }
                         frame.set_image(Some(image));
                         window.redraw();
                     }
@@ -41,7 +46,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 Key::Left => {
                     if *image_index.borrow() > 0 {
                         *image_index.borrow_mut() -= 1;
-                        let image = fltk::image::SharedImage::load(&std::path::Path::new(&images[*image_index.borrow()])).unwrap();
+                        let mut image = fltk::image::SharedImage::load(&std::path::Path::new(&images[*image_index.borrow()])).unwrap();
+                        if image.w() > window.w() || image.h() > window.h() {
+                            let (width, height) = (window.w(), window.h());
+                            image.scale(width, height, true, false);
+                        }
                         frame.set_image(Some(image));
                         window.redraw();
                     }

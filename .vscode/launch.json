@@ -1,0 +1,45 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'vwr'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=vwr",
+                    "--package=vwr"
+                ],
+                "filter": {
+                    "name": "vwr",
+                    "kind": "bin"
+                }
+            },
+            "args": ["C:/Users/Chris/Code/vwr/myimage.png"],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'vwr'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=vwr",
+                    "--package=vwr"
+                ],
+                "filter": {
+                    "name": "vwr",
+                    "kind": "bin"
+                }
+            },
+            "args": ["C:/Users/Chris/Code/vwr/myimage.png"],
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}
